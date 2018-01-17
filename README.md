@@ -1,0 +1,1 @@
+# brain-breakers-registrator
