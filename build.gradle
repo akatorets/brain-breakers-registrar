@@ -4,9 +4,12 @@ version '1.0-SNAPSHOT'
 ext {
     vkApiVersion = "0.5.11"
     jsoupVersion = "1.8.3"
+    jaxrsVersion = "2.0"
+    jerseyVersion = "2.25"
 }
 
 apply plugin: 'java'
+apply plugin: 'jetty'
 
 sourceCompatibility = 1.8
 
@@ -17,4 +20,6 @@ repositories {
 dependencies {
     compile("com.vk.api:sdk:${vkApiVersion}")
     compile("org.jsoup:jsoup:${jsoupVersion}")
+    compile("javax.ws.rs:javax.ws.rs-api:${jaxrsVersion}")
+    compile("org.glassfish.jersey.containers:jersey-container-servlet-core:${jerseyVersion}")
 }
