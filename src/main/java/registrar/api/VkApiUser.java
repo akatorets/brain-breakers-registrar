@@ -12,10 +12,20 @@ import com.vk.api.sdk.httpclient.HttpTransportClient;
 import com.vk.api.sdk.queries.newsfeed.NewsfeedGetFilter;
 import registrar.domain.Post;
 
+/**
+ * Performs operations with vk API.
+ */
 public class VkApiUser {
     private VkApiClient vkApiClient = new VkApiClient(HttpTransportClient.getInstance());
     private JsonParser jsonParser = new JsonParser();
 
+    /**
+     * Return last post from specified source.
+     * @param userActor the user on whose behalf the request is made
+     * @param sourceId source
+     * @return the top post
+     * @throws ClientException on vk API client error
+     */
     public Post getTopPost(UserActor userActor, String sourceId) throws ClientException {
         String newsResponse = vkApiClient.newsfeed()
                 .get(userActor)
@@ -27,6 +37,14 @@ public class VkApiUser {
         return convertFromJson(newsResponse);
     }
 
+    /**
+     * Send a comment under the post.
+     * @param userActor the user on whose behalf the comment is posted
+     * @param post the post under which you need to leave a comment
+     * @param message comment message
+     * @throws ClientException on vk API client error
+     * @throws ApiException on vk API error
+     */
     public void createComment(UserActor userActor, Post post, String message) throws ClientException, ApiException {
         vkApiClient.wall()
                 .createComment(userActor, post.getPostId())
@@ -35,6 +53,14 @@ public class VkApiUser {
                 .execute();
     }
 
+    /**
+     * Send a message.
+     * @param userActor the user on whose behalf the message is sent
+     * @param peerId the destination user id
+     * @param message message
+     * @throws ClientException on vk API client error
+     * @throws ApiException on vk API error
+     */
     public void sendMessage(UserActor userActor, Integer peerId, String message) throws ClientException, ApiException {
         vkApiClient.messages()
                 .send(userActor)

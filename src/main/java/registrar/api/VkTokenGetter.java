@@ -28,7 +28,7 @@ public final class VkTokenGetter {
      * @param login user login (phone or email)
      * @param password user password
      * @return collection of retrieved cookies after successful login
-     * @throws IOException
+     * @throws IOException on error
      */
     private static Map<String, String> login(String login, String password) throws IOException {
         Map<String, String> cookies;
@@ -65,7 +65,7 @@ public final class VkTokenGetter {
      * @param login user login (email or phone)
      * @param password user password
      * @return VK access token
-     * @throws IOException
+     * @throws IOException on error
      */
     public static String getAccessToken(String appId, String scope, String login, String password) throws IOException {
 

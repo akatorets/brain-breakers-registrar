@@ -20,14 +20,17 @@ public class VitalRadioRegistrar {
     private final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-    public void register(String registrationDate) {
+    /**
+     * Create the registration task.
+     * @param registrationStartDate the registration start date
+     */
+    public void register(String registrationStartDate) {
         String token = getToken();
 
         UserActor userActor = new UserActor(USER_ID, token);
         RegistrationTask task = new RegistrationTask(userActor);
 
-
-        Date date = convertDate(registrationDate);
+        Date date = convertDate(registrationStartDate);
         scheduler.schedule(task, date.getTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
     }
 
@@ -39,12 +42,20 @@ public class VitalRadioRegistrar {
         }
     }
 
-    private Date convertDate(String registrationDate) {
+    /**
+     * Convert the start registration date from string and return the date 20 seconds before.
+     * @param registrationStartDate the start registration date
+     * @return the date 20 seconds before the start of registration
+     */
+    private Date convertDate(String registrationStartDate) {
+        Date date = null;
         try {
-            return format.parse(registrationDate);
+            date = format.parse(registrationStartDate);
         } catch (ParseException e) {
-            throw new IllegalArgumentException("Can not convert date from " + registrationDate);
+            throw new IllegalArgumentException("Can not convert date from " + registrationStartDate);
         }
+        // return the date 20 seconds before the start of registration
+        return new Date(date.getTime() - 20000);
     }
 
 }

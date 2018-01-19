@@ -22,9 +22,7 @@ public class RegistrationTask implements Runnable {
     @Override
     public void run() {
         try {
-            System.out.println("start");
             Post topPost = vkApiUser.getTopPost(userActor, GROUP_ID);
-            System.out.println("item get");
             while (true) {
                 Post newPost = vkApiUser.getTopPost(userActor, GROUP_ID);
                 if (newPost.getDate().equals(topPost.getDate())) {
