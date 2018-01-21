@@ -19,7 +19,7 @@ public class RegistrationResource {
     @POST
     public Response register(@QueryParam("date") String date) {
         registrar.register(date);
-        return Response.status(201).build();
+        return Response.status(202).build();
     }
 
 }
