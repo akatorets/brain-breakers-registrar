@@ -1,6 +1,7 @@
 package registrar.api;
 
 import com.vk.api.sdk.client.actors.UserActor;
+import registrar.exception.TokenException;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -38,7 +39,7 @@ public class VitalRadioRegistrar {
         try {
             return VkTokenGetter.getAccessToken(APPLICATION_ID, SCOPE, LOGIN, PASSWORD);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new TokenException("Couldn't retrieve access token: " + e.getMessage(), e);
         }
     }
 
