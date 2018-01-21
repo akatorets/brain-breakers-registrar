@@ -23,3 +23,6 @@ dependencies {
     compile("javax.ws.rs:javax.ws.rs-api:${jaxrsVersion}")
     compile("org.glassfish.jersey.containers:jersey-container-servlet-core:${jerseyVersion}")
 }
+
+task stage(dependsOn: ['build', 'clean'])
+build.mustRunAfter clean
