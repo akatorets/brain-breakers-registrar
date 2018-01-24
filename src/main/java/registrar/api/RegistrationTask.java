@@ -7,6 +7,7 @@ import registrar.domain.Post;
 
 import java.util.concurrent.TimeUnit;
 
+import static registrar.Constants.COMMENT;
 import static registrar.Constants.GROUP_ID;
 import static registrar.Constants.USER_ID;
 
@@ -28,7 +29,7 @@ public class RegistrationTask implements Runnable {
                 if (newPost.getDate().equals(topPost.getDate())) {
                     TimeUnit.SECONDS.sleep(2L);
                 } else {
-                    vkApiUser.createComment(userActor, newPost, "Vital Radio, 4-8");
+                    vkApiUser.createComment(userActor, newPost, COMMENT);
                     vkApiUser.sendMessage(userActor, USER_ID, "Success");
                     break;
                 }
