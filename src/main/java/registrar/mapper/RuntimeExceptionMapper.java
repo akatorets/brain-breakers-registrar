@@ -7,12 +7,12 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class IllegalArgumentExceptionMapper implements ExceptionMapper<IllegalArgumentException> {
+public class RuntimeExceptionMapper implements ExceptionMapper<RuntimeException> {
     @Override
-    public Response toResponse(IllegalArgumentException exception) {
-        ErrorResponse response = new ErrorResponse(400, exception.getMessage());
+    public Response toResponse(RuntimeException exception) {
+        ErrorResponse response = new ErrorResponse(500, exception.getMessage());
         return Response
-                .status(400)
+                .status(500)
                 .entity(response)
                 .build();
     }

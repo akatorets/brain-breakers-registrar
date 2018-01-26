@@ -54,7 +54,7 @@ public class VitalRadioRegistrar {
         try {
             date = format.parse(registrationStartDate);
         } catch (ParseException e) {
-            throw new IllegalArgumentException("Can not convert date from " + registrationStartDate);
+            throw new IllegalArgumentException("Can not convert date from '" + registrationStartDate + "'");
         }
         // return the date 20 seconds before the start of registration
         return new Date(date.getTime() - 20000);
