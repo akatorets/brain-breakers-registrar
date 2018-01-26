@@ -7,7 +7,6 @@ public class Constants {
     public static final String APPLICATION_ID = System.getProperty("application");
     public static final String SCOPE = System.getProperty("scope");
     public static final String GROUP_ID = System.getProperty("group");
-    public static final String COMMENT = System.getProperty("comment");
 
     private Constants() {}
 

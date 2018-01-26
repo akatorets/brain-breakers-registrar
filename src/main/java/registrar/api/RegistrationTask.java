@@ -7,17 +7,17 @@ import registrar.domain.Post;
 
 import java.util.concurrent.TimeUnit;
 
-import static registrar.Constants.COMMENT;
 import static registrar.Constants.GROUP_ID;
 import static registrar.Constants.USER_ID;
 
 public class RegistrationTask implements Runnable {
-
-    private UserActor userActor;
     private VkApiUser vkApiUser = new VkApiUser();
+    private UserActor userActor;
+    private String message;
 
-    public RegistrationTask(UserActor userActor) {
+    public RegistrationTask(UserActor userActor, String message) {
         this.userActor = userActor;
+        this.message = message;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class RegistrationTask implements Runnable {
                 if (newPost.getDate().equals(topPost.getDate())) {
                     TimeUnit.SECONDS.sleep(2L);
                 } else {
-                    vkApiUser.createComment(userActor, newPost, COMMENT);
+                    vkApiUser.createComment(userActor, newPost, message);
                     vkApiUser.sendMessage(userActor, USER_ID, "Success");
                     break;
                 }

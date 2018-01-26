@@ -1,6 +1,7 @@
 package registrar.api;
 
 import com.vk.api.sdk.client.actors.UserActor;
+import registrar.domain.RegistrationInfo;
 import registrar.exception.TokenException;
 
 import java.io.IOException;
@@ -23,15 +24,15 @@ public class VitalRadioRegistrar {
 
     /**
      * Create the registration task.
-     * @param registrationStartDate the registration start date
+     * @param registrationInfo information required for registration ${@link RegistrationInfo}
      */
-    public void register(String registrationStartDate) {
+    public void register(RegistrationInfo registrationInfo) {
         String token = getToken();
 
         UserActor userActor = new UserActor(USER_ID, token);
-        RegistrationTask task = new RegistrationTask(userActor);
+        RegistrationTask task = new RegistrationTask(userActor, registrationInfo.getMessage());
 
-        Date date = convertDate(registrationStartDate);
+        Date date = convertDate(registrationInfo.getDate());
         scheduler.schedule(task, date.getTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
     }
 
