@@ -2,6 +2,7 @@ package registrar.api;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.vk.api.sdk.client.VkApiClient;
@@ -12,12 +13,34 @@ import com.vk.api.sdk.httpclient.HttpTransportClient;
 import com.vk.api.sdk.queries.newsfeed.NewsfeedGetFilter;
 import registrar.domain.Post;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Performs operations with vk API.
  */
 public class VkApiUser {
     private VkApiClient vkApiClient = new VkApiClient(HttpTransportClient.getInstance());
     private JsonParser jsonParser = new JsonParser();
+    private Gson gson = new Gson();
+
+    /**
+     * Return specified number of recent posts from specified source.
+     * @param userActor the user on whose behalf the request is made
+     * @param sourceId source
+     * @param count number of posts
+     * @return specified number of recent posts
+     * @throws ClientException on vk API client error
+     */
+    public List<Post> getPosts(UserActor userActor, String sourceId, Integer count) throws ClientException {
+        String posts = vkApiClient.newsfeed()
+                .get(userActor)
+                .sourceIds(sourceId)
+                .filters(NewsfeedGetFilter.POST)
+                .count(count)
+                .executeAsString();
+        return convertFromJson(posts);
+    }
 
     /**
      * Return last post from specified source.
@@ -27,14 +50,8 @@ public class VkApiUser {
      * @throws ClientException on vk API client error
      */
     public Post getTopPost(UserActor userActor, String sourceId) throws ClientException {
-        String newsResponse = vkApiClient.newsfeed()
-                .get(userActor)
-                .sourceIds(sourceId)
-                .filters(NewsfeedGetFilter.POST)
-                .count(1)
-                .executeAsString();
-
-        return convertFromJson(newsResponse);
+        List<Post> posts = getPosts(userActor, sourceId, 1);
+        return posts.iterator().next();
     }
 
     /**
@@ -69,10 +86,29 @@ public class VkApiUser {
                 .execute();
     }
 
-    private Post convertFromJson(String responseJson) {
+    /**
+     * Make a repost of given post.
+     * @param userActor the user which makes a repost
+     * @param post required post
+     * @throws ClientException on vk API client error
+     * @throws ApiException on vk API error
+     */
+    public void repost(UserActor userActor, Post post) throws ClientException, ApiException {
+        String object = "wall" + post.getSourceId() + "_" + post.getPostId();
+        vkApiClient.wall()
+                .repost(userActor, object)
+                .execute();
+    }
+
+    private List<Post> convertFromJson(String responseJson) {
         JsonObject response = jsonParser.parse(responseJson).getAsJsonObject().getAsJsonObject("response");
         JsonArray items = response.getAsJsonArray("items");
-        return new Gson().fromJson(items.iterator().next(), Post.class);
+
+        List<Post> posts = new ArrayList<>();
+        for (JsonElement element: items) {
+            posts.add(gson.fromJson(element, Post.class));
+        }
+        return posts;
     }
 
 }
