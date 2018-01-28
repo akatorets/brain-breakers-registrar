@@ -1,0 +1,1 @@
+web: build/libs/brain-breakers-registrar-1.0-SNAPSHOT.war
