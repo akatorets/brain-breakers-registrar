@@ -20,6 +20,8 @@ import java.util.List;
  * Performs operations with vk API.
  */
 public class VkApiUser {
+    private static final String POST_TYPE = "post";
+
     private VkApiClient vkApiClient = new VkApiClient(HttpTransportClient.getInstance());
     private JsonParser jsonParser = new JsonParser();
     private Gson gson = new Gson();
@@ -106,7 +108,10 @@ public class VkApiUser {
 
         List<Post> posts = new ArrayList<>();
         for (JsonElement element: items) {
-            posts.add(gson.fromJson(element, Post.class));
+            JsonObject jsonObject = element.getAsJsonObject();
+            if (POST_TYPE.equals(jsonObject.get("type").getAsString())) {
+                posts.add(gson.fromJson(jsonObject, Post.class));
+            }
         }
         return posts;
     }
