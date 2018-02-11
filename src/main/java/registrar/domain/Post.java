@@ -14,7 +14,7 @@ public class Post {
     private String text;
 
     @SerializedName("date")
-    private Long date;
+    private Integer date;
 
     public Integer getSourceId() {
         return sourceId;
@@ -40,11 +40,11 @@ public class Post {
         this.text = text;
     }
 
-    public Long getDate() {
+    public Integer getDate() {
         return date;
     }
 
-    public void setDate(Long date) {
+    public void setDate(Integer date) {
         this.date = date;
     }
 

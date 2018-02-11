@@ -10,6 +10,7 @@ import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.httpclient.HttpTransportClient;
+import com.vk.api.sdk.objects.wall.WallComment;
 import com.vk.api.sdk.queries.newsfeed.NewsfeedGetFilter;
 import registrar.domain.Post;
 
@@ -54,6 +55,23 @@ public class VkApiUser {
     public Post getTopPost(UserActor userActor, String sourceId) throws ClientException {
         List<Post> posts = getPosts(userActor, sourceId, 1);
         return posts.iterator().next();
+    }
+
+    /**
+     * Return comments from the post.
+     * @param userActor the user on whose behalf the request is made
+     * @param post the post from which comments are taken
+     * @param count number of comments
+     * @return comments
+     * @throws ClientException on vk API client error
+     * @throws ApiException on vk API error
+     */
+    public List<WallComment> getComments(UserActor userActor, Post post, Integer count) throws ClientException, ApiException {
+        return vkApiClient.wall()
+                .getComments(userActor, post.getPostId())
+                .ownerId(post.getSourceId())
+                .count(count)
+                .execute().getItems();
     }
 
     /**
