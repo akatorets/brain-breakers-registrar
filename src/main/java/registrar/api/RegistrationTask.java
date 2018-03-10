@@ -3,6 +3,7 @@ package registrar.api;
 import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
+import com.vk.api.sdk.objects.groups.GroupFull;
 import com.vk.api.sdk.objects.wall.WallComment;
 import registrar.domain.Post;
 
@@ -14,6 +15,7 @@ import static registrar.Constants.USER_ID;
 
 public class RegistrationTask implements Runnable {
     private static final String COMMENT_STATISTICS_TEMPLATE = "%d) %s (+%d)\r\n";
+    private static final String POST_LINK_TEMPLATE = "https://vk.com/%s?w=wall%d_%d\r\n";
 
     private VkApiUser vkApiUser = new VkApiUser();
     private UserActor userActor;
@@ -57,11 +59,18 @@ public class RegistrationTask implements Runnable {
         List<WallComment> comments = vkApiUser.getComments(userActor, post, 10);
 
         StringBuilder builder = new StringBuilder();
+        builder.append(createPostLink(post));
         for (int i = 0; i < comments.size(); i++) {
             WallComment comment = comments.get(i);
             int diff = comment.getDate() - post.getDate();
             builder.append(String.format(COMMENT_STATISTICS_TEMPLATE, i + 1, comment.getText(), diff));
         }
         return builder.toString();
+    }
+
+    private String createPostLink(Post post) throws ClientException, ApiException {
+        String source = post.getSourceId().toString();
+        GroupFull groupFull = vkApiUser.getGroup(userActor, source.startsWith("-") ? source.substring(1) : source);
+        return String.format(POST_LINK_TEMPLATE, groupFull.getScreenName(), post.getSourceId(), post.getPostId());
     }
 }

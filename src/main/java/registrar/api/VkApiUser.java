@@ -10,6 +10,7 @@ import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.httpclient.HttpTransportClient;
+import com.vk.api.sdk.objects.groups.GroupFull;
 import com.vk.api.sdk.objects.wall.WallComment;
 import com.vk.api.sdk.queries.newsfeed.NewsfeedGetFilter;
 import registrar.domain.Post;
@@ -55,6 +56,22 @@ public class VkApiUser {
     public Post getTopPost(UserActor userActor, String sourceId) throws ClientException {
         List<Post> posts = getPosts(userActor, sourceId, 1);
         return posts.iterator().next();
+    }
+
+    /**
+     * Return information about specified group.
+     * @param userActor the user on whose behalf the request is made
+     * @param groupId group id
+     * @return specified group
+     * @throws ClientException on vk API client error
+     * @throws ApiException on vk API error
+     */
+    public GroupFull getGroup(UserActor userActor, String groupId) throws ClientException, ApiException {
+        List<GroupFull> groups = vkApiClient.groups()
+                .getById(userActor)
+                .groupId(groupId)
+                .execute();
+        return groups.iterator().next();
     }
 
     /**
