@@ -39,7 +39,7 @@ public class RegistrationTask implements Runnable {
                 }
             }
             TimeUnit.SECONDS.sleep(30);
-            vkApiUser.sendMessage(userActor, USER_ID, formatStatistics(newPost));
+            sendStatistics(newPost);
         } catch (ClientException | ApiException | InterruptedException e) {
             try {
                 vkApiUser.sendMessage(userActor, USER_ID, e.getMessage());
@@ -47,6 +47,10 @@ public class RegistrationTask implements Runnable {
                 ex.printStackTrace();
             }
         }
+    }
+
+    private void sendStatistics(Post post) throws ClientException, ApiException {
+        vkApiUser.sendMessage(userActor, USER_ID, formatStatistics(post));
     }
 
     private String formatStatistics(Post post) throws ClientException, ApiException {

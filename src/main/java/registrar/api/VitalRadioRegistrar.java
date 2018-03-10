@@ -32,7 +32,7 @@ public class VitalRadioRegistrar {
         UserActor userActor = new UserActor(USER_ID, token);
         RegistrationTask task = new RegistrationTask(userActor, registrationInfo.getMessage());
 
-        Date date = convertDate(registrationInfo.getDate());
+        Date date = getStartDate(registrationInfo.getDate());
         scheduler.schedule(task, date.getTime() - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
     }
 
@@ -49,15 +49,18 @@ public class VitalRadioRegistrar {
      * @param registrationStartDate the start registration date
      * @return the date 20 seconds before the start of registration
      */
-    private Date convertDate(String registrationStartDate) {
+    private Date getStartDate(String registrationStartDate) {
+        return new Date(convertStringToDate(registrationStartDate).getTime() - 20000);
+    }
+
+    private Date convertStringToDate(String dateString) {
         Date date = null;
         try {
-            date = format.parse(registrationStartDate);
+            date = format.parse(dateString);
         } catch (ParseException e) {
-            throw new IllegalArgumentException("Can not convert date from '" + registrationStartDate + "'");
+            throw new IllegalArgumentException("Can not convert date from '" + dateString + "'");
         }
-        // return the date 20 seconds before the start of registration
-        return new Date(date.getTime() - 20000);
+        return date;
     }
 
 }
